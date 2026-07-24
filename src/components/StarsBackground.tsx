@@ -23,10 +23,14 @@ const StarsBackground = () => {
     const NUM = 250;
     const stars: Star[] = [];
 
+    const BASE_SPEED = 2;
     let mouseX = 0;
     let mouseY = 0;
-    let speed = 2;
-    let targetSpeed = 2;
+    let speed = BASE_SPEED;
+    let targetSpeed = BASE_SPEED;
+
+    let lastTouchX: number | null = null;
+    let lastTouchY: number | null = null;
 
     const reset = (s: Star) => {
       s.x = (Math.random() - 0.5) * width;
@@ -52,17 +56,53 @@ const StarsBackground = () => {
       mouseX = (e.clientX - width / 2) * 0.15;
       mouseY = (e.clientY - height / 2) * 0.15;
 
-      targetSpeed = 2 + Math.abs(e.movementX + e.movementY) * 0.15;
+      targetSpeed = BASE_SPEED + Math.abs(e.movementX + e.movementY) * 0.15;
       targetSpeed = Math.min(targetSpeed, 10);
     };
 
     window.addEventListener("mousemove", handleMove);
 
+    // --- Touch support (mirrors mousemove behavior for mobile) ---
+    const handleTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+
+      mouseX = (touch.clientX - width / 2) * 0.15;
+      mouseY = (touch.clientY - height / 2) * 0.15;
+
+      if (lastTouchX !== null && lastTouchY !== null) {
+        const dx = touch.clientX - lastTouchX;
+        const dy = touch.clientY - lastTouchY;
+        targetSpeed = BASE_SPEED + Math.abs(dx + dy) * 0.15;
+        targetSpeed = Math.min(targetSpeed, 10);
+      }
+
+      lastTouchX = touch.clientX;
+      lastTouchY = touch.clientY;
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      lastTouchX = touch.clientX;
+      lastTouchY = touch.clientY;
+      targetSpeed = 12; // little burst on tap, similar to click
+    };
+
+    const handleTouchEnd = () => {
+      lastTouchX = null;
+      lastTouchY = null;
+    };
+
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd);
+
     const handleClick = () => {
       targetSpeed = 20;
 
       setTimeout(() => {
-        targetSpeed = 2;
+        targetSpeed = BASE_SPEED;
       }, 300);
     };
 
@@ -77,7 +117,8 @@ const StarsBackground = () => {
       const light = isLight();
 
       speed += (targetSpeed - speed) * 0.05;
-      targetSpeed *= 0.98;
+      // Decay toward the baseline instead of toward zero, so motion never fully stops
+      targetSpeed = BASE_SPEED + (targetSpeed - BASE_SPEED) * 0.98;
 
       ctx.fillStyle = light
         ? "rgba(250,250,250,0.18)"
@@ -140,6 +181,9 @@ const StarsBackground = () => {
       cancelAnimationFrame(animation);
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
       window.removeEventListener("click", handleClick);
     };
   }, []);
