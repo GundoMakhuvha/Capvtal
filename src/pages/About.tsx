@@ -4,7 +4,7 @@ import { useSEO, SITE_URL } from "@/lib/seo";
 
 const About = () => {
   useSEO({
-    title: "About Us | Capvtal Innovations",
+    title: "About Us: Capvtal Innovations",
     description:
       "Capvtal Innovations is a South African multi-disciplinary innovation company led by founder Gundo Makhuvha, driving technology, creative production, and business excellence across Africa.",
     path: "/about",
