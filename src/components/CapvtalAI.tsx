@@ -9,12 +9,12 @@ type Cell = "X" | "O" | null;
 // ─── Local fallback knowledge base ────────────────────────────────────────
 const knowledge: { match: RegExp; reply: string }[] = [
   { match: /(hello|hi|hey|sup|yo)/i, reply: "Heyyy 👋 what's good? Wanna learn about Capvtal or get bodied at tic-tac-toe?" },
-  { match: /(who|what).*(capvtal|company|you guys)/i, reply: "Capvtal Innovations is the parent company — we run three dope divisions: Capvtal Technology, Capvtal Production, and Capvtal Records. Basically, if it's creative or technical, we cook. Founder is Mr. Gundo Makhuvha." },
+  { match: /(who|what).*(capvtal|company|you guys)/i, reply: "Capvtal Innovations is the parent company — we run 2 dope divisions: Capvtal Technology, and Capvtal Productions. Basically, if it's creative or technical, we cook it up" },
   { match: /(ceo|founder|boss|leader|owner|mr\.?\s*gundo|gundo makhuvha)/i, reply: "Capvtal was founded by Mr. Gundo Makhuvha — the visionary behind everything we build, create, and drop." },
   { match: /(division|divisions|tech|technology|software|web|dev|coding|hosting|data)/i, reply: "Capvtal Technology is where we build — software development, web development, data analysis, and hosting & support. Clean code, solid infra." },
   { match: /(production|design|logo|marketing|content|branding|presentation)/i, reply: "Capvtal Production is the creative crew — logo design, content creation, digital marketing, and presentations that actually slap." },
   { match: /(records|music|video|photo|mastering|film|editing|distribution)/i, reply: "Capvtal Records is the studio side — music distribution, photography & videography, mastering & engineering, and film editing. Cinematic vibes." },
-  { match: /(service|services|what do you|what does capvtal|offer|what can|provide)/i, reply: "We offer 12 services across three divisions: Software Dev, Web Dev, Data Analysis, Hosting, Logo Design, Content Creation, Digital Marketing, Presentations, Music Distribution, Photo & Video, Mastering, and Film Editing. A lot of fire under one roof." },
+  { match: /(service|services|what do you|what does capvtal|offer|what can|provide)/i, reply: "We offer 12 services across 2 divisions: Software Dev, Web Dev, Data Analysis, Hosting, Logo Design, Content Creation, Digital Marketing. A lot of fire under one roof." },
   { match: /(hustle|hustle app|next gen)/i, reply: "Hustle is Capvtal's in-house app — next gen innovation, built from the ground up. That's the one." },
   { match: /(contact|email|reach|hire|work with)/i, reply: "Easy — hit the Contact page and we'll get back to you fast. We actually reply, promise." },
   { match: /(price|cost|how much|quote|pricing)/i, reply: "Pricing depends on scope — shoot us a message on the Contact page and we'll hook you up with a quote." },
@@ -24,7 +24,7 @@ const knowledge: { match: RegExp; reply: string }[] = [
 ];
 
 const fallbacks = [
-  "Damn, that's a curveball — try asking me about our founder Mr. Gundo Makhuvha, our 12 services, three divisions, or wanna play tic-tac-toe?",
+  "Eish, that's a curveball — try asking me about our founder Mr. Gundo Makhuvha, our 12 services, three divisions, or wanna play tic-tac-toe?",
   "Not 100% sure on that one, but I know everything Capvtal — founder, divisions, services, the Hustle app. Ask away.",
   "Rephrase that? I'm sharp on Capvtal stuff and games — that's my lane.",
 ];
@@ -84,15 +84,7 @@ const DROPDOWN_TOPICS: { group: string; items: { label: string; prompt: string }
       { label: "Content creation", prompt: "Can you create content for social media?" },
     ],
   },
-  {
-    group: "Records",
-    items: [
-      { label: "Capvtal Records", prompt: "Tell me about Capvtal Records division" },
-      { label: "Music distribution", prompt: "Do you distribute music to Spotify and Apple Music?" },
-      { label: "Photography & video", prompt: "Do you offer photography and videography?" },
-      { label: "Audio mastering", prompt: "Tell me about your audio mastering services" },
-    ],
-  },
+  
   {
     group: "Other",
     items: [
