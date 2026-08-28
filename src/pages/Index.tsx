@@ -20,7 +20,7 @@ const divisions = [
   {
     title: "Capvtal Production",
     path: "/production",
-    description: "Creative brand design, content creation, digital marketing strategies, and professional presentations.",
+    description: "Creative brand design, content creation, and as well as digital marketing strategies.",
     neonColor: "rgba(170, 0, 255, 0.3)",
     hoverShadow: "0 0 30px rgba(170, 0, 255, 0.2)",
   },
