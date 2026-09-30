@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import GlassCard from "@/components/GlassCard";
 import BlogCard from "@/components/BlogCard";
 import MovingTicker from "@/components/MovingTicker";
-import StarsBackground from "@/components/StarsBackground";
+import AuroraGridBackground from "@/components/AuroraGridBackground";
 import ServiceIcons from "@/components/ServiceIcons";
 import CapvtalAI from "@/components/CapvtalAI";
 import { blogs } from "@/data/blogs";
@@ -20,7 +20,7 @@ const divisions = [
   {
     title: "Capvtal Production",
     path: "/production",
-    description: "Creative brand design, content creation, and as well as digital marketing strategies.",
+    description: "Creative brand design, content creation, digital marketing strategies, and professional presentations.",
     neonColor: "rgba(170, 0, 255, 0.3)",
     hoverShadow: "0 0 30px rgba(170, 0, 255, 0.2)",
   },
@@ -108,7 +108,7 @@ const Index = () => {
 
       <main>
         <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden" aria-label="Introduction">
-          <StarsBackground />
+          <AuroraGridBackground />
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute top-20 left-[10%] w-72 h-72 rounded-full bg-foreground/[0.02] blur-3xl animate-float" />
             <div className="absolute bottom-20 right-[15%] w-96 h-96 rounded-full bg-foreground/[0.03] blur-3xl animate-float" style={{ animationDelay: "2s" }} />
