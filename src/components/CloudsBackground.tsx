@@ -22,13 +22,14 @@ interface Palette {
 }
 
 const DARK: Record<CloudsVariant, Palette> = {
+  // Home page: same daytime sky as light mode
   brand: {
-    skyColor: 0x050b1e,
-    cloudColor: 0x5068a8,
-    cloudShadowColor: 0x020308,
-    sunColor: 0x00aaff,
-    sunGlareColor: 0x7a2cff,
-    sunlightColor: 0xa070ff,
+    skyColor: 0x68b8d7,
+    cloudColor: 0xadc1de,
+    cloudShadowColor: 0x183550,
+    sunColor: 0xff9919,
+    sunGlareColor: 0xff6633,
+    sunlightColor: 0xff9933,
   },
   technology: {
     skyColor: 0x03101f,
