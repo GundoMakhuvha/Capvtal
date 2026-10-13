@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import GlassCard from "./GlassCard";
 import type { BlogPost } from "@/data/blogs";
 import hustleWhite from "@/assets/hustle-white.png";
 import hustleBlack from "@/assets/hustle-black.png";
 
-// Blog images map
 import blogAi from "@/assets/blog-ai.jpg";
 import blogBrand from "@/assets/blog-brand.jpg";
 import blogMusic from "@/assets/blog-music.jpg";
@@ -27,64 +27,63 @@ const imageMap: Record<string, string> = {
   "blog-artist": blogArtist,
 };
 
-const BlogCard = ({ blog, large = false }: { blog: BlogPost; large?: boolean }) => {
-  const navigate = useNavigate();
+const formatDate = (d: string) => {
+  const date = new Date(d);
+  return isNaN(date.getTime()) ? d : date.toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" });
+};
 
+const BlogCard = ({ blog, large = false }: { blog: BlogPost; large?: boolean }) => {
   if (blog.isAd) {
     return (
-      <GlassCard
-        onClick={() => navigate(`/blog/${blog.id}`)}
-        className={`h-full overflow-hidden border-accent/30 ${large ? "p-10" : ""}`}
-        neonColor="rgba(255, 255, 255, 0.1)"
-        hoverShadow="0 0 30px rgba(255,255,255,0.08)"
-      >
-        <div className={`flex flex-col h-full items-center text-center ${large ? "gap-4" : ""}`}>
-          <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-1 px-2 py-0.5 rounded-full border border-border/50">
-            Sponsored · Capvtal
-          </span>
-          <img
-            src={hustleWhite}
-            alt="Hustle"
-            className={`${large ? "h-28" : "h-16"} w-auto mb-2 dark:block hidden`}
-          />
-          <img
-            src={hustleBlack}
-            alt="Hustle"
-            className={`${large ? "h-28" : "h-16"} w-auto mb-2 dark:hidden block`}
-          />
-          <h3 className={`${large ? "text-2xl" : "text-lg"} font-semibold text-foreground mb-2`}>{blog.title}</h3>
-          <p className={`${large ? "text-base max-w-md" : "text-sm"} text-muted-foreground flex-1`}>{blog.excerpt}</p>
-          <span className={`mt-4 ${large ? "text-sm" : "text-xs"} font-medium text-foreground/80 uppercase tracking-wider`}>
-            Learn More →
-          </span>
-        </div>
-      </GlassCard>
+      <Link to={`/blog/${blog.id}`} className="block h-full rounded-[28px]" aria-label={`${blog.title} — learn more`}>
+        <GlassCard className={`h-full ${large ? "p-8 md:p-12" : ""}`} neonColor="rgba(255, 255, 255, 0.18)">
+          <div className={`flex h-full flex-col items-center text-center ${large ? "gap-4" : "gap-2"}`}>
+            <span className="rounded-full border border-foreground/10 bg-foreground/[0.04] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              Built by Capvtal
+            </span>
+            <img src={hustleWhite} alt="Hustle app logo" loading="lazy" className={`${large ? "h-24 md:h-28" : "h-16"} hidden w-auto dark:block`} />
+            <img src={hustleBlack} alt="Hustle app logo" loading="lazy" className={`${large ? "h-24 md:h-28" : "h-16"} block w-auto dark:hidden`} />
+            <h3 className={`${large ? "text-2xl md:text-3xl" : "text-lg"} font-semibold tracking-tight text-foreground`}>{blog.title}</h3>
+            <p className={`${large ? "max-w-md text-base" : "text-sm"} flex-1 leading-relaxed text-muted-foreground`}>{blog.excerpt}</p>
+            <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
+              Learn more <ArrowRight size={16} className="transition-transform duration-300 group-hover/card:translate-x-1" />
+            </span>
+          </div>
+        </GlassCard>
+      </Link>
     );
   }
 
   const imgSrc = blog.image ? imageMap[blog.image] : undefined;
 
   return (
-    <GlassCard onClick={() => navigate(`/blog/${blog.id}`)} className="h-full overflow-hidden">
-      <div className="flex flex-col h-full">
-        {imgSrc && (
-          <div className="-mx-6 -mt-6 mb-4 h-40 overflow-hidden">
-            <img
-              src={imgSrc}
-              alt={blog.title}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
+    <Link to={`/blog/${blog.id}`} className="block h-full rounded-[28px]">
+      <GlassCard className="h-full !p-0" interactive={false}>
+        <article className="flex h-full flex-col">
+          {imgSrc && (
+            <div className="aspect-[16/10] overflow-hidden">
+              <img
+                src={imgSrc}
+                alt=""
+                className="h-full w-full object-cover transition-transform duration-700 ease-apple group-hover/card:scale-[1.04]"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          )}
+          <div className="flex flex-1 flex-col p-6">
+            <span className="mb-2 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              {blog.category} · {blog.readTime}
+            </span>
+            <h3 className="mb-2 text-lg font-semibold leading-snug tracking-tight text-foreground">{blog.title}</h3>
+            <p className="flex-1 text-sm leading-relaxed text-muted-foreground">{blog.excerpt}</p>
+            <time dateTime={blog.date} className="mt-5 text-xs text-muted-foreground">
+              {formatDate(blog.date)}
+            </time>
           </div>
-        )}
-        <span className="text-xs text-muted-foreground uppercase tracking-widest mb-2">
-          {blog.category} · {blog.readTime}
-        </span>
-        <h3 className="text-lg font-semibold text-foreground mb-2">{blog.title}</h3>
-        <p className="text-sm text-muted-foreground flex-1">{blog.excerpt}</p>
-        <span className="text-xs text-muted-foreground mt-4">{blog.date}</span>
-      </div>
-    </GlassCard>
+        </article>
+      </GlassCard>
+    </Link>
   );
 };
 

@@ -2,6 +2,9 @@ import ServiceCard from "@/components/ServiceCard";
 import ClientReviews from "@/components/ClientReviews";
 import ToolLogo from "@/components/ToolLogo";
 import DivisionIcons from "@/components/DivisionIcons";
+import DivisionHero from "@/components/DivisionHero";
+import SectionHeader from "@/components/SectionHeader";
+import { useSEO } from "@/lib/seo";
 import { Music2, Camera, Sliders, Film, Mic2, Headphones, Disc3, Radio, Video, Music, Volume2, Clapperboard } from "lucide-react";
 import records1 from "@/assets/records-1.jpg";
 import records2 from "@/assets/records-2.jpg";
@@ -105,29 +108,33 @@ const gallery = [
   { src: records3, alt: "Behind the scenes music video shoot" },
 ];
 
-const Records = () => (
-  <div className="division-records records-dark">
-    <div className="container mx-auto px-6 py-16">
-      <h1 className="text-5xl font-bold mb-4 opacity-0 animate-fade-in">
-        <span style={{ color: "white" }}>Capvtal</span>{" "}
-        <span className="neon-heading" style={{ color: "hsl(0, 100%, 55%)" }}>Records</span>
-      </h1>
-      <p className="text-muted-foreground mb-12 max-w-2xl opacity-0 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-        Elevating artists through professional distribution, production, and creative services.
-      </p>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-        {services.map((s, i) => (
-          <div key={s.title} className="opacity-0 animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
-            <ServiceCard title={s.title} desc={s.desc} details={s.details} />
+const Records = () => {
+  useSEO({ path: "/records" });
+  return (
+    <div className="division-records relative">
+      <DivisionHero
+        name="Records"
+        tagline="Elevating artists through professional distribution, production, and creative services."
+        orbColors={["var(--brand-red)", "25 100% 55%", "345 90% 60%", "10 100% 50%"]}
+      />
+      <div className="container relative z-10 mx-auto px-5 md:px-6">
+        <section className="py-10 md:py-16" aria-label="Services">
+          <SectionHeader eyebrow="Services" title="What we offer." />
+          <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 md:gap-5 xl:grid-cols-4">
+            {services.map((s, i) => (
+              <div key={s.title} data-reveal data-reveal-delay={(i * 0.06).toFixed(2)}>
+                <ServiceCard index={i} title={s.title} desc={s.desc} details={s.details} />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </section>
 
-      <section className="mb-20">
-        <DivisionIcons
-          accentColor="rgba(255,30,30,0.9)"
-          items={[
+        <section className="py-16 md:py-24">
+          <DivisionIcons
+            eyebrow="Capabilities"
+            title="From studio to stage."
+            accentColor="rgba(255,30,30,0.9)"
+            items={[
             { name: "Music Distribution", icon: Music2 },
             { name: "Streaming", icon: Disc3 },
             { name: "Radio Promo", icon: Radio },
@@ -141,32 +148,35 @@ const Records = () => (
             { name: "Music Videos", icon: Clapperboard },
             { name: "Film Editing", icon: Film },
           ]}
-        />
-      </section>
+          />
+        </section>
 
-      <section className="mb-20">
-        <h2 className="text-3xl font-bold text-foreground mb-8">Tools & Software</h2>
-        <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
-          {tools.map((tool) => (
-            <ToolLogo key={tool.name} name={tool.name} icon={tool.icon} />
-          ))}
-        </div>
-      </section>
+        <section className="py-10 md:py-16" aria-label="Tools">
+          <SectionHeader eyebrow="Stack" title="Tools & software." />
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6 md:gap-4 lg:grid-cols-8">
+            {tools.map((tool) => (
+              <div key={tool.name} data-reveal>
+                <ToolLogo name={tool.name} icon={tool.icon} />
+              </div>
+            ))}
+          </div>
+        </section>
 
-      <section className="mb-20">
-        <h2 className="text-3xl font-bold text-foreground mb-8">Gallery</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {gallery.map((img, i) => (
-            <div key={i} className="glass rounded-2xl aspect-[4/3] overflow-hidden">
-              <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
-            </div>
-          ))}
-        </div>
-      </section>
+        <section className="py-10 md:py-16" aria-label="Gallery">
+          <SectionHeader eyebrow="Gallery" title="Behind the scenes." />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+            {gallery.map((img, i) => (
+              <div key={i} data-reveal data-reveal-delay={(i * 0.08).toFixed(2)} className="glass aspect-[4/3] overflow-hidden rounded-[28px]">
+                <img src={img.src} alt={img.alt} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 ease-apple hover:scale-105" />
+              </div>
+            ))}
+          </div>
+        </section>
 
-      <ClientReviews reviews={reviews} />
+        <ClientReviews reviews={reviews} />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Records;

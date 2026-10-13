@@ -13,8 +13,7 @@ const knowledge: { match: RegExp; reply: string }[] = [
   { match: /(ceo|founder|boss|leader|owner|mr\.?\s*gundo|gundo makhuvha)/i, reply: "Capvtal was founded by Mr. Gundo Makhuvha — the visionary behind everything we build, create, and drop." },
   { match: /(division|divisions|tech|technology|software|web|dev|coding|hosting|data)/i, reply: "Capvtal Technology is where we build — software development, web development, data analysis, and hosting & support. Clean code, solid infra." },
   { match: /(production|design|logo|marketing|content|branding|presentation)/i, reply: "Capvtal Production is the creative crew — logo design, content creation, digital marketing, and presentations that actually slap." },
-  { match: /(records|music|video|photo|mastering|film|editing|distribution)/i, reply: "Capvtal Records is the studio side — music distribution, photography & videography, mastering & engineering, and film editing. Cinematic vibes." },
-  { match: /(service|services|what do you|what does capvtal|offer|what can|provide)/i, reply: "We offer 12 services across 2 divisions: Software Dev, Web Dev, Data Analysis, Hosting, Logo Design, Content Creation, Digital Marketing. A lot of fire under one roof." },
+  { match: /(service|services|what do you|what does capvtal|offer|what can|provide)/i, reply: "We offer services across 2 divisions: Software Dev, Web Dev, Data Analysis, Hosting, Logo Design, Content Creation, Digital Marketing. A lot of fire under one roof." },
   { match: /(hustle|hustle app|next gen)/i, reply: "Hustle is Capvtal's in-house app — next gen innovation, built from the ground up. That's the one." },
   { match: /(contact|email|reach|hire|work with)/i, reply: "Easy — hit the Contact page and we'll get back to you fast. We actually reply, promise." },
   { match: /(price|cost|how much|quote|pricing)/i, reply: "Pricing depends on scope — shoot us a message on the Contact page and we'll hook you up with a quote." },
@@ -24,7 +23,7 @@ const knowledge: { match: RegExp; reply: string }[] = [
 ];
 
 const fallbacks = [
-  "Eish, that's a curveball — try asking me about our founder Mr. Gundo Makhuvha, our 12 services, three divisions, or wanna play tic-tac-toe?",
+  "Eish, that's a curveball — try asking me about our founder Mr. Gundo Makhuvha, our services, two divisions, or wanna play tic-tac-toe?",
   "Not 100% sure on that one, but I know everything Capvtal — founder, divisions, services, the Hustle app. Ask away.",
   "Rephrase that? I'm sharp on Capvtal stuff and games — that's my lane.",
 ];
@@ -36,10 +35,9 @@ const localReply = (text: string): string => {
 
 const SYSTEM_PROMPT = `You are Capvtal AI, the official assistant for Capvtal Innovations — a South African company founded by Mr. Gundo Makhuvha. Keep replies short (2-4 sentences max), conversational, and confident. Use casual, youthful language — like talking to a friend, not a corporate bot. Never use em-dashes. Avoid bullet lists; speak in natural prose.
 
-Capvtal Innovations has three divisions:
+Capvtal Innovations has two divisions:
 1. Capvtal Technology: software development, web development, data analysis, hosting & support.
 2. Capvtal Production: logo design, content creation, digital marketing, presentations.
-3. Capvtal Records: music distribution, photography & videography, audio mastering & engineering, film & video editing.
 
 The Hustle app is Capvtal's in-house product — described as "next gen innovation."
 For contact or pricing: direct people to the Contact page.
@@ -63,7 +61,7 @@ const DROPDOWN_TOPICS: { group: string; items: { label: string; prompt: string }
     items: [
       { label: "What is Capvtal Innovations?", prompt: "What is Capvtal Innovations?" },
       { label: "Who is Mr. Gundo Makhuvha?", prompt: "Who is Mr. Gundo Makhuvha?" },
-      { label: "The three divisions", prompt: "What are the three divisions of Capvtal?" },
+      { label: "The divisions", prompt: "What are the divisions of Capvtal?" },
     ],
   },
   {
@@ -279,22 +277,25 @@ const CapvtalAI = () => {
       {/* Toggle button */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-foreground text-background flex items-center justify-center shadow-lg hover:scale-110 transition-transform overflow-hidden"
-        aria-label="Capvtal AI"
+        className="bottom-safe fixed right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-foreground text-background shadow-[0_12px_40px_-8px_rgba(0,0,0,0.5)] transition-transform duration-500 ease-spring hover:scale-105 active:scale-90"
+        aria-label={open ? "Close Capvtal AI" : "Open Capvtal AI chat"}
+        aria-expanded={open}
       >
-        {open ? (
+        <span className={`absolute transition-all duration-500 ease-spring ${open ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-50 opacity-0"}`}>
           <X className="h-5 w-5" />
-        ) : (
-          <>
-            <img src={hustleWhite} alt="Hustle" className="h-7 w-7 object-contain block dark:hidden" />
-            <img src={hustleBlack} alt="Hustle" className="h-7 w-7 object-contain hidden dark:block" />
-          </>
-        )}
+        </span>
+        <span className={`absolute transition-all duration-500 ease-spring ${open ? "rotate-90 scale-50 opacity-0" : "rotate-0 scale-100 opacity-100"}`}>
+          <img src={hustleWhite} alt="" className="block h-7 w-7 object-contain dark:hidden" />
+          <img src={hustleBlack} alt="" className="hidden h-7 w-7 object-contain dark:block" />
+        </span>
       </button>
 
       {/* Panel */}
       {open && (
-        <div className="fixed bottom-24 right-6 z-50 w-[340px] max-w-[calc(100vw-2rem)] h-[520px] glass rounded-2xl flex flex-col overflow-hidden animate-scale-in">
+        <div
+          className="liquid-glass liquid-glass-strong animate-sheet-in fixed right-3 z-50 flex w-[360px] max-w-[calc(100vw-1.5rem)] origin-bottom-right flex-col overflow-hidden rounded-[28px] sm:right-5"
+          style={{ bottom: "calc(max(1.25rem, env(safe-area-inset-bottom) + 0.5rem) + 4.25rem)", height: "min(540px, calc(100dvh - 9.5rem))" }}
+        >
 
           {/* Header */}
           <div className="px-4 py-3 border-b border-border/40 flex items-center justify-between flex-shrink-0">
@@ -311,13 +312,13 @@ const CapvtalAI = () => {
             <div className="flex gap-1 text-xs">
               <button
                 onClick={() => setTab("chat")}
-                className={`px-2 py-1 rounded-md flex items-center gap-1 ${tab === "chat" ? "bg-foreground/10 text-foreground" : "text-muted-foreground"}`}
+                className={`px-2.5 py-1 rounded-full flex items-center gap-1 ${tab === "chat" ? "bg-foreground/10 text-foreground" : "text-muted-foreground"}`}
               >
                 <MessageCircle className="h-3 w-3" /> Chat
               </button>
               <button
                 onClick={() => setTab("game")}
-                className={`px-2 py-1 rounded-md flex items-center gap-1 ${tab === "game" ? "bg-foreground/10 text-foreground" : "text-muted-foreground"}`}
+                className={`px-2.5 py-1 rounded-full flex items-center gap-1 ${tab === "game" ? "bg-foreground/10 text-foreground" : "text-muted-foreground"}`}
               >
                 <Gamepad2 className="h-3 w-3" /> XO
               </button>
@@ -376,7 +377,7 @@ const CapvtalAI = () => {
                   onChange={handleDropdown}
                   disabled={inputDisabled}
                   defaultValue=""
-                  className="w-full bg-foreground/5 border border-border/50 rounded-lg px-3 py-1.5 text-[12px] text-muted-foreground focus:outline-none focus:border-foreground/30 disabled:opacity-40 disabled:cursor-not-allowed appearance-none cursor-pointer"
+                  className="w-full bg-foreground/5 border border-border/50 rounded-full px-3 py-1.5 text-[16px] sm:text-[13px] text-muted-foreground focus:outline-none focus:border-foreground/30 disabled:opacity-40 disabled:cursor-not-allowed appearance-none cursor-pointer"
                 >
                   <option value="" disabled>Browse topics...</option>
                   {DROPDOWN_TOPICS.map((group) => (
@@ -399,7 +400,7 @@ const CapvtalAI = () => {
                   onKeyDown={(e) => e.key === "Enter" && send()}
                   disabled={inputDisabled}
                   placeholder="Ask me anything..."
-                  className="flex-1 bg-transparent border border-border/50 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-foreground/30 disabled:opacity-40"
+                  className="flex-1 min-w-0 bg-transparent border border-border/50 rounded-full px-4 py-2 text-[16px] sm:text-sm focus:outline-none focus:border-foreground/30 disabled:opacity-40"
                 />
                 <button
                   onClick={send}
@@ -438,7 +439,7 @@ const CapvtalAI = () => {
                     key={i}
                     onClick={() => play(i)}
                     disabled={!!c || locked}
-                    className="h-20 w-20 rounded-xl glass text-2xl font-bold text-foreground hover:bg-foreground/5 transition-colors disabled:cursor-default"
+                    className="h-[4.5rem] w-[4.5rem] sm:h-20 sm:w-20 rounded-2xl glass text-2xl font-bold text-foreground hover:bg-foreground/5 transition-colors disabled:cursor-default"
                   >
                     {c}
                   </button>

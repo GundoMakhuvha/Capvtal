@@ -1,4 +1,5 @@
-import { ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { Plus } from "lucide-react";
 import GlassCard from "@/components/GlassCard";
 
 interface ServiceCardProps {
@@ -8,50 +9,69 @@ interface ServiceCardProps {
     types: string[];
     differentiators: string[];
   };
-  open: boolean;
-  onToggle: () => void;
+  /** Optional controlled state — falls back to its own state when omitted. */
+  open?: boolean;
+  onToggle?: () => void;
+  index?: number;
 }
 
-const ServiceCard = ({ title, desc, details, open, onToggle }: ServiceCardProps) => {
+const ServiceCard = ({ title, desc, details, open: openProp, onToggle, index }: ServiceCardProps) => {
+  const [localOpen, setLocalOpen] = useState(false);
+  const open = openProp ?? localOpen;
+  const toggle = onToggle ?? (() => setLocalOpen((o) => !o));
+
   return (
-    <GlassCard interactive={false} className="h-full cursor-pointer" onClick={onToggle}>
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="text-lg font-semibold text-foreground mb-2">{title}</h3>
-        <ChevronDown
-          className={`h-4 w-4 text-muted-foreground shrink-0 mt-1 transition-transform duration-300 ${
-            open ? "rotate-180" : ""
-          }`}
-        />
-      </div>
-      <p className="text-sm text-muted-foreground">{desc}</p>
+    <GlassCard interactive={false} className="h-full">
+      <button
+        type="button"
+        onClick={toggle}
+        aria-expanded={open}
+        className="flex w-full flex-col text-left focus-visible:outline-none"
+      >
+        <div className="flex w-full items-start justify-between gap-3">
+          <div>
+            {index !== undefined && (
+              <span className="neon-text mb-3 block text-xs font-semibold tabular-nums tracking-wider">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+            )}
+            <h3 className="text-xl font-semibold tracking-tight text-foreground">{title}</h3>
+          </div>
+          <span
+            className={`mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-foreground/[0.06] text-foreground/70 transition-transform duration-500 ease-spring ${
+              open ? "rotate-45" : ""
+            }`}
+            aria-hidden="true"
+          >
+            <Plus className="h-4 w-4" />
+          </span>
+        </div>
+        <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">{desc}</p>
+      </button>
 
       <div
-        className={`overflow-hidden transition-all duration-400 ${
-          open ? "max-h-[500px] opacity-100 mt-4" : "max-h-0 opacity-0"
+        className={`grid transition-[grid-template-rows,opacity] duration-500 ease-apple ${
+          open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
         }`}
       >
-        <div className="border-t border-border/30 pt-4 space-y-3">
-          <div>
-            <p className="text-xs uppercase tracking-wider text-muted-foreground/70 mb-2">What we offer</p>
-            <ul className="space-y-1">
-              {details.types.map((t) => (
-                <li key={t} className="text-sm text-foreground/80 flex items-center gap-2">
-                  <span className="w-1 h-1 rounded-full bg-foreground/40" />
-                  {t}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="text-xs uppercase tracking-wider text-muted-foreground/70 mb-2">What sets us apart</p>
-            <ul className="space-y-1">
-              {details.differentiators.map((d) => (
-                <li key={d} className="text-sm text-foreground/80 flex items-center gap-2">
-                  <span className="w-1 h-1 rounded-full bg-foreground/40" />
-                  {d}
-                </li>
-              ))}
-            </ul>
+        <div className="overflow-hidden">
+          <div className="mt-5 space-y-5 border-t border-foreground/[0.08] pt-5">
+            {[
+              { label: "What we offer", items: details.types },
+              { label: "What sets us apart", items: details.differentiators },
+            ].map((group) => (
+              <div key={group.label}>
+                <p className="mb-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{group.label}</p>
+                <ul className="space-y-2">
+                  {group.items.map((t) => (
+                    <li key={t} className="flex items-start gap-2.5 text-sm text-foreground/85">
+                      <span className="neon-text mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-current" />
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
       </div>

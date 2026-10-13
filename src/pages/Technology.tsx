@@ -3,7 +3,9 @@ import ServiceCard from "@/components/ServiceCard";
 import ClientReviews from "@/components/ClientReviews";
 import ToolLogo from "@/components/ToolLogo";
 import DivisionIcons from "@/components/DivisionIcons";
-import StarField from "@/components/StarField";
+import DivisionHero from "@/components/DivisionHero";
+import SectionHeader from "@/components/SectionHeader";
+import { useSEO } from "@/lib/seo";
 import { Code2, Globe, Smartphone, BarChart3, Database, Cloud, Cpu, Layers, Terminal, Mail, Search, RefreshCw } from "lucide-react";
 
 const services = [
@@ -108,35 +110,39 @@ const reviews = [
 
 const Technology = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  useSEO({ path: "/technology" });
 
   return (
     <div className="division-technology relative">
-      <StarField color="rgba(0,170,255,0.8)" density={150} />
-      <div className="container mx-auto px-6 py-16 relative z-10">
-        <h1 className="text-5xl font-bold mb-4 opacity-0 animate-fade-in">
-          <span className="text-foreground">Capvtal</span>{" "}
-          <span className="neon-heading" style={{ color: "hsl(200, 100%, 50%)" }}>Technology</span>
-        </h1>
-        <p className="text-muted-foreground mb-12 max-w-2xl opacity-0 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-          Building the future through innovative software solutions, data-driven insights, and reliable infrastructure.
-        </p>
+      <DivisionHero
+        name="Technology"
+        tagline="Building the future through innovative software solutions, data-driven insights, and reliable infrastructure."
+        orbColors={["var(--brand-blue)", "190 100% 55%", "220 100% 65%", "170 90% 50%"]}
+      />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-          {services.map((s, i) => (
-            <div key={s.title} className="opacity-0 animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
-              <ServiceCard
-                title={s.title}
-                desc={s.desc}
-                details={s.details}
-                open={openIndex === i}
-                onToggle={() => setOpenIndex(openIndex === i ? null : i)}
-              />
-            </div>
-          ))}
-        </div>
+      <div className="container relative z-10 mx-auto px-5 md:px-6">
+        <section className="py-10 md:py-16" aria-label="Services">
+          <SectionHeader eyebrow="Services" title="What we build." subtitle="Tap a card to see what each service includes." />
+          <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-4 md:gap-5">
+            {services.map((s, i) => (
+              <div key={s.title} data-reveal data-reveal-delay={(i * 0.06).toFixed(2)}>
+                <ServiceCard
+                  index={i}
+                  title={s.title}
+                  desc={s.desc}
+                  details={s.details}
+                  open={openIndex === i}
+                  onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
 
-        <section className="mb-20">
+        <section className="py-16 md:py-24" aria-label="Capabilities">
           <DivisionIcons
+            eyebrow="Capabilities"
+            title="Every capability, covered."
             accentColor="rgba(0,170,255,0.9)"
             items={[
               { name: "Software Dev", icon: Code2 },
@@ -155,11 +161,13 @@ const Technology = () => {
           />
         </section>
 
-        <section className="mb-20">
-          <h2 className="text-3xl font-bold text-foreground mb-8">Technologies We Use</h2>
-          <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
-            {technologies.map((tech) => (
-              <ToolLogo key={tech.name} name={tech.name} icon={tech.icon} />
+        <section className="py-10 md:py-16" aria-label="Technologies we use.">
+          <SectionHeader eyebrow="Stack" title="Technologies we use." />
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6 md:gap-4 lg:grid-cols-8">
+            {technologies.map((tool, i) => (
+              <div key={tool.name} data-reveal data-reveal-delay={(i * 0.02).toFixed(2)}>
+                <ToolLogo name={tool.name} icon={tool.icon} />
+              </div>
             ))}
           </div>
         </section>

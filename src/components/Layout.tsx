@@ -1,212 +1,94 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { Menu, X, Sun, Moon } from "lucide-react";
-import logoWhite from "@/assets/logo-white.png";
-import logoBlack from "@/assets/logo-black.png";
-import hustleWhite from "@/assets/hustle-white.png";
-import hustleBlack from "@/assets/hustle-black.png";
+import { ArrowUpRight } from "lucide-react";
+import logoWhite from "@/assets/hustle-white.png";
+import logoBlack from "@/assets/hustle-black.png";
+import LiquidNav from "./LiquidNav";
+import SiteBackground, { type BackgroundVariant } from "./SiteBackground";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
-const mainNav = [
-  { label: "Home", path: "/" },
-  { label: "About", path: "/about" },
-  
-  { label: "Contact Us", path: "/contact" },
-];
+const variantFor = (path: string): BackgroundVariant => {
+  if (path.startsWith("/technology")) return "technology";
+  if (path.startsWith("/production")) return "production";
+  if (path.startsWith("/records")) return "records";
+  return "brand";
+};
 
-const divisionNav = [
+const footerCols = [
   {
-    label: "Technology",
-    path: "/technology",
-    glow: "rgba(0, 170, 255, 0.3)",
+    title: "Divisions",
+    links: [
+      { label: "Capvtal Technology", path: "/technology" },
+      { label: "Capvtal Production", path: "/production" },
+    ],
   },
   {
-    label: "Production",
-    path: "/production",
-    glow: "rgba(170, 0, 255, 0.3)",
+    title: "Company",
+    links: [
+      { label: "Home", path: "/" },
+      { label: "About Capvtal", path: "/about" },
+      { label: "Blog", path: "/blogs" },
+      { label: "Contact", path: "/contact" },
+    ],
   },
 ];
-
-{divisionNav.map((item) => (
-  <Link
-    key={item.path}
-    to={item.path}
-    className="
-      px-4 py-2 rounded-xl
-      text-white transition-all duration-300
-      hover:scale-105
-      hover:bg-white/5
-      active:scale-95
-    "
-    style={{
-      boxShadow: "0 0 0 rgba(0,0,0,0)",
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.boxShadow = `0 0 30px ${item.glow}`;
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.boxShadow = "0 0 0 rgba(0,0,0,0)";
-    }}
-  >
-    {item.label}
-  </Link>
-))}
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const location = useLocation();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") !== "light";
-    }
-    return true;
-  });
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (darkMode) {
-      root.classList.add("dark");
-      root.classList.remove("light");
-      localStorage.setItem("theme", "dark");
-    } else {
-      root.classList.add("light");
-      root.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [darkMode]);
+  const { pathname } = useLocation();
+  useScrollReveal(pathname);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Main Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
-        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={hustleWhite} alt="Hustle" className="h-10 -auto dark:block hidden" />
-            <img src={hustleBlack} alt="Hustle" className="h-10 w-auto dark:hidden block" />
-          </Link>
+    <div className="relative flex min-h-screen min-h-[100dvh] flex-col">
+      <SiteBackground variant={variantFor(pathname)} />
+      <LiquidNav />
 
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8">
-            {mainNav.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`text-sm font-medium transition-colors duration-300 ${
-                  location.pathname === item.path
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              className="text-foreground p-2 glass rounded-full hover:bg-accent transition-colors"
-              onClick={() => setDarkMode(!darkMode)}
-              aria-label="Toggle theme"
-            >
-              {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-            <button
-              className="md:hidden text-foreground"
-              onClick={() => setMobileOpen(!mobileOpen)}
-            >
-              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Division Sub-Navigation */}
-        <div className="border-t border-border/30">
-          <div className="container mx-auto px-6 h-10 hidden md:flex items-center gap-6">
-            <span className="text-xs text-muted-foreground tracking-widest uppercase">Divisions</span>
-            <div className="w-px h-4 bg-border" />
-            {divisionNav.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`text-xs font-medium tracking-wide transition-colors duration-300 ${
-                  location.pathname === item.path
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl pt-20 px-6">
-          <div className="flex flex-col gap-6">
-            {mainNav.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setMobileOpen(false)}
-                className="text-2xl font-light text-foreground"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="h-px bg-border my-2" />
-            <span className="text-xs text-muted-foreground tracking-widest uppercase">Divisions</span>
-            {divisionNav.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setMobileOpen(false)}
-                className="text-xl font-light text-muted-foreground"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Main Content */}
-      <main className="pt-[104px]">{children}</main>
+      <main id="main" className="relative z-10 flex-1 pt-24 md:pt-28">
+        {children}
+      </main>
 
       {/* Footer */}
-      <footer className="glass border-t border-border/50 mt-20">
-        <div className="container mx-auto px-6 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <img src={hustleWhite} alt="Hustle" className="h-12 w-auto dark:block hidden" />
-              <img src={hustleBlack} alt="Hustle" className="h-12 w-auto dark:hidden block" />
-              <p className="text-sm text-muted-foreground">
-                Next Genoration Innovation.
+      <footer className="relative z-10 mt-24 border-t border-foreground/[0.06]">
+        <div className="container mx-auto px-5 pb-safe pt-14 md:px-6">
+          <div className="grid grid-cols-2 gap-10 md:grid-cols-12">
+            <div className="col-span-2 md:col-span-5">
+              <Link to="/" className="inline-flex items-center gap-3" aria-label="Capvtal Innovations — home">
+                <img src={logoWhite} alt="" width={40} height={34} loading="lazy" className="hidden h-9 w-auto dark:block" />
+                <img src={logoBlack} alt="" width={40} height={34} loading="lazy" className="block h-9 w-auto dark:hidden" />
+                <span className="text-lg font-semibold tracking-tight text-foreground">Capvtal Innovations</span>
+              </Link>
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
+                Next Generation Innovation. A South African technology and creative company building software,
+                websites, brands and content that move businesses forward.
               </p>
             </div>
-            <div>
-              <h4 className="text-sm font-semibold text-foreground mb-3">Divisions</h4>
-              <div className="flex flex-col gap-2">
-                {divisionNav.map((item) => (
-                  <Link key={item.path} to={item.path} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    Capvtal {item.label}
-                  </Link>
-                ))}
+
+            {footerCols.map((col) => (
+              <div key={col.title} className="md:col-span-2">
+                <h2 className="mb-4 text-[12px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{col.title}</h2>
+                <ul className="flex flex-col gap-2.5">
+                  {col.links.map((l) => (
+                    <li key={l.path}>
+                      <Link to={l.path} className="text-sm text-foreground/80 transition-colors hover:text-foreground">
+                        {l.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-            <div>
-              <h4 className="text-sm font-semibold text-foreground mb-3">Links</h4>
-              <div className="flex flex-col gap-2">
-                {mainNav.map((item) => (
-                  <Link key={item.path} to={item.path} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
+            ))}
+
+            <div className="col-span-2 md:col-span-3">
+              <h2 className="mb-4 text-[12px] font-medium uppercase tracking-[0.16em] text-muted-foreground">Start something</h2>
+              <p className="mb-5 text-sm text-muted-foreground">Have an idea, a brand or a product in mind? Let's talk.</p>
+              <Link to="/contact" className="btn-primary h-11 px-5 text-sm">
+                Start a project <ArrowUpRight size={16} />
+              </Link>
             </div>
           </div>
-          <div className="border-t border-border/50 mt-8 pt-8 text-center text-xs text-muted-foreground">
-            © 2026 Capvtal Innovations. All rights reserved.
+
+          <div className="hairline mt-12" />
+          <div className="flex flex-col items-start justify-between gap-2 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center">
+            <p>© {new Date().getFullYear()} Capvtal Innovations. All rights reserved.</p>
+            <p>Designed &amp; built in South Africa by Capvtal Technology.</p>
           </div>
         </div>
       </footer>

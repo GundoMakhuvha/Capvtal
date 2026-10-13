@@ -1,14 +1,5 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
+# Capvtal Innovations — https://www.capvtal.com
 User-agent: *
 Allow: /
+
+Sitemap: https://www.capvtal.com/sitemap.xml

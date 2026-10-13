@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Space Grotesk", "sans-serif"],
+        sans: ["-apple-system", "BlinkMacSystemFont", "SF Pro Display", "Inter", "Segoe UI", "Roboto", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -61,7 +61,12 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      transitionTimingFunction: {
+        spring: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        apple: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+      },
       borderRadius: {
+        "4xl": "2rem",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
@@ -76,8 +81,8 @@ export default {
           to: { height: "0" },
         },
         "fade-in": {
-          "0%": { opacity: "0", transform: "translateY(20px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
+          "0%": { opacity: "0", transform: "translateY(16px)", filter: "blur(6px)" },
+          "100%": { opacity: "1", transform: "translateY(0)", filter: "blur(0)" },
         },
         "float": {
           "0%, 100%": { transform: "translateY(0px)" },
@@ -95,7 +100,7 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.6s ease-out forwards",
+        "fade-in": "fade-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards",
         "float": "float 6s ease-in-out infinite",
         "wiggle": "wiggle 0.6s ease-in-out infinite",
         "icon-bounce": "icon-bounce 2.5s ease-in-out infinite",

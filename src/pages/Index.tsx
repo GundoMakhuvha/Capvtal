@@ -1,193 +1,220 @@
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowRight, ArrowUpRight, Code2, Clapperboard, Sparkles } from "lucide-react";
 import GlassCard from "@/components/GlassCard";
 import BlogCard from "@/components/BlogCard";
 import MovingTicker from "@/components/MovingTicker";
-import AuroraGridBackground from "@/components/AuroraGridBackground";
+import CloudsBackground from "@/components/CloudsBackground";
 import ServiceIcons from "@/components/ServiceIcons";
+import SectionHeader from "@/components/SectionHeader";
 import CapvtalAI from "@/components/CapvtalAI";
 import { blogs } from "@/data/blogs";
-import { useSEO, SITE_URL } from "@/lib/seo";
+import { useSEO } from "@/lib/seo";
 
 const divisions = [
   {
     title: "Capvtal Technology",
     path: "/technology",
     description: "Cutting-edge software development, web solutions, data analytics, and reliable hosting infrastructure.",
-    neonColor: "rgba(0, 170, 255, 0.3)",
-    hoverShadow: "0 0 30px rgba(0, 170, 255, 0.2)",
+    icon: Code2,
+    hue: "var(--brand-blue)",
+    neonColor: "rgba(0, 170, 255, 0.35)",
+    hoverShadow: "0 30px 80px -30px rgba(0, 170, 255, 0.45)",
+    span: "md:col-span-3",
   },
   {
     title: "Capvtal Production",
     path: "/production",
     description: "Creative brand design, content creation, digital marketing strategies, and professional presentations.",
-    neonColor: "rgba(170, 0, 255, 0.3)",
-    hoverShadow: "0 0 30px rgba(170, 0, 255, 0.2)",
+    icon: Clapperboard,
+    hue: "var(--brand-purple)",
+    neonColor: "rgba(170, 0, 255, 0.35)",
+    hoverShadow: "0 30px 80px -30px rgba(170, 0, 255, 0.45)",
+    span: "md:col-span-3",
   },
   {
     title: "Capvtal Innovations",
     path: "/about",
     description: "The parent company driving innovation across all divisions with a unified vision for excellence.",
-    neonColor: "rgba(255, 255, 255, 0.15)",
-    hoverShadow: "0 0 30px rgba(255, 255, 255, 0.1)",
+    icon: Sparkles,
+    hue: "0 0% 100%",
+    neonColor: "rgba(255, 255, 255, 0.22)",
+    hoverShadow: "0 30px 80px -30px rgba(255, 255, 255, 0.18)",
+    span: "md:col-span-6",
   },
 ];
 
-const FULL_TEXT = "Capvtal Innovations.";
+const HEADLINE = ["Capvtal", "Innovations."];
 
-const PAGE_TITLE = "Capvtal";
-const PAGE_DESCRIPTION =
-  "Capvtal Innovations drives next-generation innovation through Capvtal Technology (software, web, data, hosting) and Capvtal Production (branding, content, digital marketing).";
+/** Headline letters blur in one by one. The full text is always in the DOM (good for SEO). */
+const AnimatedHeadline = () => {
+  let n = 0;
+  return (
+    <h1 className="display-xl" aria-label="Capvtal Innovations.">
+      {HEADLINE.map((word, wi) => (
+        <span key={word} className="inline-block whitespace-nowrap" aria-hidden="true">
+          {word.split("").map((ch, ci) => (
+            <span key={ci} className="hero-letter text-gradient" style={{ animationDelay: `${0.15 + n++ * 0.045}s` }}>
+              {ch}
+            </span>
+          ))}
+          {wi < HEADLINE.length - 1 && <span className="inline-block">&nbsp;</span>}
+        </span>
+      ))}
+    </h1>
+  );
+};
 
-const Index = () => {
-  const navigate = useNavigate();
-  const [time, setTime] = useState(new Date());
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [typedCount, setTypedCount] = useState(0);
-  const [showCursor, setShowCursor] = useState(true);
-
-  useSEO({
-    title: PAGE_TITLE,
-    description: PAGE_DESCRIPTION,
-    path: "/",
-    jsonLd: {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: "Capvtal Innovations",
-      url: SITE_URL,
-      description: PAGE_DESCRIPTION,
-      department: divisions
-        .filter((d) => d.path !== "/about")
-        .map((d) => ({
-          "@type": "Organization",
-          name: d.title,
-          description: d.description,
-          url: `${SITE_URL}${d.path}`,
-        })),
-    },
-  });
-
+const Clock = () => {
+  const [time, setTime] = useState(() => new Date());
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    const handleMouse = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouse);
-    return () => window.removeEventListener("mousemove", handleMouse);
-  }, []);
-
-  useEffect(() => {
-    if (typedCount < FULL_TEXT.length) {
-      const t = setTimeout(() => setTypedCount((c) => c + 1), 260);
-      return () => clearTimeout(t);
-    }
-  }, [typedCount]);
-
-  useEffect(() => {
-    const t = setInterval(() => setShowCursor((c) => !c), 530);
+    const t = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
+  return (
+    <div className="liquid-glass bottom-safe fixed left-5 z-40 hidden h-11 items-center gap-2 rounded-full px-4 sm:flex" aria-hidden="true">
+      <span className="relative z-10 h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+      <span className="relative z-10 text-[13px] font-medium tabular-nums text-foreground/75">
+        {time.toLocaleTimeString("en-ZA", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+      </span>
+    </div>
+  );
+};
 
+const Index = () => {
+  useSEO({ path: "/" });
   const hustleBlog = useMemo(() => blogs.find((b) => b.isAd), []);
 
   return (
     <div className="relative">
-      <div
-        className="fixed w-[500px] h-[500px] rounded-full pointer-events-none z-0"
-        style={{
-          left: mousePos.x - 250,
-          top: mousePos.y - 250,
-          background: "radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)",
-        }}
-        aria-hidden="true"
-      />
+      {/* ── Hero ───────────────────────────────────────────── */}
+      <section
+        className="relative -mt-24 flex min-h-[100svh] items-center justify-center overflow-hidden pt-24 md:-mt-28 md:pt-28"
+        aria-label="Introduction"
+      >
+        <CloudsBackground variant="brand" />
 
-      <main>
-        <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden" aria-label="Introduction">
-          <AuroraGridBackground />
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-20 left-[10%] w-72 h-72 rounded-full bg-foreground/[0.02] blur-3xl animate-float" />
-            <div className="absolute bottom-20 right-[15%] w-96 h-96 rounded-full bg-foreground/[0.03] blur-3xl animate-float" style={{ animationDelay: "2s" }} />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-foreground/[0.015] blur-3xl" />
+        <div className="container relative z-10 mx-auto px-5 text-center md:px-6">
+          <p
+            className="liquid-glass mx-auto mb-7 inline-flex h-8 items-center gap-2 rounded-full px-3.5 text-[12px] font-medium tracking-wide text-foreground/80 opacity-0 animate-fade-in"
+          >
+            <span className="relative z-10 h-1.5 w-1.5 rounded-full bg-[hsl(var(--brand-blue))] shadow-[0_0_10px_hsl(var(--brand-blue))]" />
+            <span className="relative z-10">This is</span>
+          </p>
+
+          <AnimatedHeadline />
+
+          <p className="lead mx-auto mt-6 max-w-xl opacity-0 animate-fade-in" style={{ animationDelay: "0.9s" }}>
+            Next Generation Innovation.
+          </p>
+
+          <div
+            className="mt-10 flex flex-col items-center justify-center gap-3 opacity-0 animate-fade-in sm:flex-row"
+            style={{ animationDelay: "1.05s" }}
+          >
+            <Link to="/contact" className="btn-primary w-full max-w-[260px] sm:w-auto" aria-label="Contact Capvtal Innovations">
+              Let's Chat. <ArrowRight size={18} />
+            </Link>
+            <Link
+              to="/about"
+              className="btn-glass liquid-glass w-full max-w-[260px] sm:w-auto"
+              aria-label="Learn more about Capvtal Innovations"
+            >
+              <span className="relative z-10">It's Us.</span>
+            </Link>
           </div>
+        </div>
 
-          <div className="container mx-auto px-6 relative z-10 text-center">
-            <p className="text-sm md:text-base tracking-[0.3em] text-muted-foreground mb-3 opacity-0 animate-fade-in">
-              This Is:
-            </p>
-            <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-gradient mb-6 opacity-0 animate-fade-in">
-              {FULL_TEXT.slice(0, typedCount)}
-              <span
-                className={`inline-block w-[4px] h-[0.85em] bg-foreground ml-1 align-middle transition-opacity duration-100 ${
-                  showCursor ? "opacity-100" : "opacity-0"
-                }`}
-                aria-hidden="true"
-              />
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto opacity-0 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              Next Generation Innovation.
-            </p>
-            <div className="mt-10 flex gap-4 justify-center opacity-0 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-              <button
-                onClick={() => navigate("/about")}
-                className="glass-hover rounded-full px-8 py-3 text-sm font-medium text-foreground"
-                aria-label="Learn more about Capvtal Innovations"
-              >
-                It's Us.
-              </button>
-              <button
-                onClick={() => navigate("/contact")}
-                className="rounded-full px-8 py-3 text-sm font-medium bg-foreground text-background hover:bg-foreground/90 transition-colors"
-                aria-label="Contact Capvtal Innovations"
-              >
-                Let's Chat.
-              </button>
-            </div>
-          </div>
-        </section>
+        {/* scroll cue */}
+        <div
+          className="absolute bottom-8 left-1/2 hidden h-10 w-6 -translate-x-1/2 justify-center rounded-full border border-foreground/20 pt-2 opacity-0 animate-fade-in md:flex"
+          style={{ animationDelay: "1.6s" }}
+          aria-hidden="true"
+        >
+          <span className="h-2 w-[3px] animate-bounce rounded-full bg-foreground/50" />
+        </div>
+      </section>
 
-        <ServiceIcons />
+      <ServiceIcons />
 
-        <section className="container mx-auto px-6 py-20" aria-label="Our divisions">
-          <h2 className="text-3xl font-bold text-foreground mb-10">Our Divisions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {divisions.map((div, i) => (
-              <div key={div.path} className="opacity-0 animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
-                <GlassCard onClick={() => navigate(div.path)} className="h-full" neonColor={div.neonColor} hoverShadow={div.hoverShadow}>
-                  <h3 className="text-lg font-semibold text-foreground mb-3">{div.title}</h3>
-                  <p className="text-sm text-muted-foreground">{div.description}</p>
-                  <span className="inline-block mt-4 text-xs text-muted-foreground">Explore →</span>
+      {/* ── Divisions (bento) ─────────────────────────────── */}
+      <section className="container mx-auto px-5 py-10 md:px-6 md:py-16" aria-label="Our divisions">
+        <SectionHeader eyebrow="Our divisions" title="Two studios. One vision." subtitle="Engineering and creativity, working side by side." />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-6 md:gap-5">
+          {divisions.map((div, i) => {
+            const Icon = div.icon;
+            return (
+              <Link key={div.path} to={div.path} className={`block rounded-[28px] ${div.span}`} data-reveal data-reveal-delay={(i * 0.08).toFixed(2)}>
+                <GlassCard className="h-full !p-7 md:!p-9" neonColor={div.neonColor} hoverShadow={div.hoverShadow}>
+                  <div className={`flex h-full flex-col gap-8 ${div.span === "md:col-span-6" ? "md:flex-row md:items-end md:justify-between" : ""}`}>
+                    <div>
+                      <span
+                        className="mb-6 grid h-12 w-12 place-items-center rounded-[16px]"
+                        style={{ background: `hsl(${div.hue} / 0.12)`, color: `hsl(${div.hue})` }}
+                      >
+                        <Icon className="h-6 w-6" strokeWidth={1.75} />
+                      </span>
+                      <h3 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">{div.title}</h3>
+                      <p className="mt-3 max-w-md text-[15px] leading-relaxed text-muted-foreground">{div.description}</p>
+                    </div>
+                    <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-medium text-foreground md:mt-0">
+                      Explore
+                      <ArrowUpRight size={16} className="transition-transform duration-300 ease-spring group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5" />
+                    </span>
+                  </div>
                 </GlassCard>
-              </div>
-            ))}
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── Latest insight ─────────────────────────────────── */}
+      {hustleBlog && (
+        <section className="container mx-auto px-5 py-20 md:px-6 md:py-28" aria-label="Latest insights">
+          <SectionHeader eyebrow="Latest" title="Fresh from the lab." align="center" />
+          <div className="mx-auto max-w-2xl" data-reveal>
+            <BlogCard blog={hustleBlog} large />
           </div>
         </section>
+      )}
 
-        {hustleBlog && (
-          <section className="container mx-auto px-6 py-10" aria-label="Latest insights">
-            <h2 className="text-3xl font-bold text-foreground mb-10">Latest Insights</h2>
-            <div className="max-w-2xl mx-auto">
-              <BlogCard blog={hustleBlog} large />
-            </div>
-          </section>
-        )}
-
-        <section className="container mx-auto px-6 py-10" aria-label="Companies we've worked with">
-          <h2 className="text-3xl font-bold text-foreground mb-4">Companies We've Worked With</h2>
+      {/* ── Clients ───────────────────────────────────────── */}
+      <section className="py-10" aria-label="Companies we've worked with">
+        <div className="container mx-auto px-5 md:px-6">
+          <SectionHeader eyebrow="Trusted by" title="Companies we've worked with." align="center" />
+        </div>
+        <div data-reveal>
           <MovingTicker />
-        </section>
-      </main>
+        </div>
+      </section>
 
-      <div className="fixed bottom-6 left-6 z-50 glass rounded-full px-5 py-2">
-        <span className="text-sm font-mono text-muted-foreground">
-          {time.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
-        </span>
-      </div>
+      {/* ── CTA ───────────────────────────────────────────── */}
+      <section className="container mx-auto px-5 pt-20 md:px-6 md:pt-28" aria-label="Start a project">
+        <div data-reveal className="liquid-glass relative overflow-hidden rounded-[36px] px-6 py-16 text-center md:px-12 md:py-24">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-0 h-[120%] w-[90%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-60 blur-3xl"
+            style={{ background: "radial-gradient(closest-side, hsl(var(--brand-blue) / 0.35), hsl(var(--brand-purple) / 0.2), transparent)" }}
+          />
+          <div className="relative z-10">
+            <h2 className="display-md mx-auto max-w-2xl text-foreground">
+              Have an idea? <span className="text-brand-gradient">Let's make it real.</span>
+            </h2>
+            <p className="lead mx-auto mt-4 max-w-lg">Software, websites, brands and campaigns — built properly, the first time.</p>
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link to="/contact" className="btn-primary w-full max-w-[260px] sm:w-auto">
+                Start a project <ArrowRight size={18} />
+              </Link>
+              <Link to="/technology" className="btn-pill w-full max-w-[260px] text-foreground/80 hover:text-foreground sm:w-auto">
+                Explore services
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
+      <Clock />
       <CapvtalAI />
     </div>
   );

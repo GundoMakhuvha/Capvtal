@@ -8,25 +8,26 @@ const ScrollToTop = () => {
 
   // Reset scroll on route change
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }, [pathname]);
 
-  // Show/hide button
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 400);
+    const onScroll = () => setVisible(window.scrollY > 600);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Centered pill so it never collides with the chat button (right) or clock (left)
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className={`fixed bottom-6 right-6 z-50 glass rounded-full p-3 text-foreground/60 hover:text-foreground transition-all duration-300 ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+      className={`liquid-glass bottom-safe fixed left-1/2 z-40 flex h-11 -translate-x-1/2 items-center gap-1.5 rounded-full px-4 text-[13px] font-medium text-foreground/80 transition-all duration-500 ease-spring hover:text-foreground ${
+        visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"
       }`}
       aria-label="Back to top"
     >
-      <ArrowUp className="h-4 w-4" />
+      <ArrowUp className="relative z-10 h-4 w-4" />
+      <span className="relative z-10">Top</span>
     </button>
   );
 };

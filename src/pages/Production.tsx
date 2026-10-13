@@ -3,7 +3,9 @@ import ServiceCard from "@/components/ServiceCard";
 import ClientReviews from "@/components/ClientReviews";
 import ToolLogo from "@/components/ToolLogo";
 import DivisionIcons from "@/components/DivisionIcons";
-import InteractiveParticles from "@/components/InteractiveParticles";
+import DivisionHero from "@/components/DivisionHero";
+import SectionHeader from "@/components/SectionHeader";
+import { useSEO } from "@/lib/seo";
 import { Palette, PenTool, Megaphone, Presentation, Image, Video, Mail, Search, Share2, Sparkles, Type, Layout } from "lucide-react";
 
 const services = [
@@ -84,35 +86,39 @@ const reviews = [
 
 const Production = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  useSEO({ path: "/production" });
 
   return (
     <div className="division-production relative">
-      <InteractiveParticles color="rgba(170,0,255,0.8)" density={120} />
-      <div className="container mx-auto px-6 py-16 relative z-10">
-        <h1 className="text-5xl font-bold mb-4 opacity-0 animate-fade-in">
-          <span className="text-foreground">Capvtal</span>{" "}
-          <span className="neon-heading" style={{ color: "hsl(270, 100%, 65%)" }}>Production</span>
-        </h1>
-        <p className="text-muted-foreground mb-12 max-w-2xl opacity-0 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-          Crafting compelling visual identities, content, and marketing strategies that elevate your brand.
-        </p>
+      <DivisionHero
+        name="Production"
+        tagline="Crafting compelling visual identities, content, and marketing strategies that elevate your brand."
+        orbColors={["var(--brand-purple)", "320 90% 62%", "290 90% 60%", "250 90% 66%"]}
+      />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-          {services.map((s, i) => (
-            <div key={s.title} className="opacity-0 animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
-              <ServiceCard
-                title={s.title}
-                desc={s.desc}
-                details={s.details}
-                open={openIndex === i}
-                onToggle={() => setOpenIndex(openIndex === i ? null : i)}
-              />
-            </div>
-          ))}
-        </div>
+      <div className="container relative z-10 mx-auto px-5 md:px-6">
+        <section className="py-10 md:py-16" aria-label="Services">
+          <SectionHeader eyebrow="Services" title="What we create." subtitle="Tap a card to see what each service includes." />
+          <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-3 md:gap-5">
+            {services.map((s, i) => (
+              <div key={s.title} data-reveal data-reveal-delay={(i * 0.06).toFixed(2)}>
+                <ServiceCard
+                  index={i}
+                  title={s.title}
+                  desc={s.desc}
+                  details={s.details}
+                  open={openIndex === i}
+                  onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
 
-        <section className="mb-20">
+        <section className="py-16 md:py-24" aria-label="Capabilities">
           <DivisionIcons
+            eyebrow="Capabilities"
+            title="Every creative need, covered."
             accentColor="rgba(170,0,255,0.9)"
             items={[
               { name: "Logo Design", icon: Palette },
@@ -127,11 +133,13 @@ const Production = () => {
           />
         </section>
 
-        <section className="mb-20">
-          <h2 className="text-3xl font-bold text-foreground mb-8">Tools We Use</h2>
-          <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
-            {tools.map((tool) => (
-              <ToolLogo key={tool.name} name={tool.name} icon={tool.icon} />
+        <section className="py-10 md:py-16" aria-label="Tools we use.">
+          <SectionHeader eyebrow="Stack" title="Tools we use." />
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6 md:gap-4 lg:grid-cols-8">
+            {tools.map((tool, i) => (
+              <div key={tool.name} data-reveal data-reveal-delay={(i * 0.02).toFixed(2)}>
+                <ToolLogo name={tool.name} icon={tool.icon} />
+              </div>
             ))}
           </div>
         </section>

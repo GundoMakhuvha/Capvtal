@@ -34,7 +34,7 @@ export const blogs: BlogPost[] = [
   {
     id: "hustle-app",
     title: "Hustle — Built by Capvtal",
-    excerpt: "We built Hustle, a productivity app designed to help you grind smarter. Track goals, manage tasks, and stay locked in.",
+    excerpt: "We built Hustle, a service marketplace app that connects people who need everyday services with local, independent \u2018hustlers\u2019. Coming soon.",
     content: "Introducing Hustle — the service marketplace app built by Capvtal Innovations. Hustle connects people who need everyday services with independent service providers known as ‘hustlers.’ It is designed to make it easier to access reliable local services while empowering individuals to earn flexible income on their own terms.\n\nHustle is built for convenience, speed, and opportunity, allowing users to find and book services quickly while service providers set their own prices and grow their personal businesses.\n\nKey features include:\n• Connects users with local service providers (‘hustlers’)\n• Allows providers to set their own pricing\n• Service categories such as cleaning, babysitting, gardening, DJing, and more\n• Simple search, browse, and booking system\n• Uber-style marketplace model for everyday services\n• Designed to create flexible income opportunities\n\nIn conclusion, Hustle simplifies access to everyday services while empowering individuals to earn on their own terms.\n\nComing soon.",
     date: "2025-02-01",
     category: "ad",

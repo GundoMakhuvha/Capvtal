@@ -20,7 +20,16 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [loading, setLoading] = useState(true);
+  // Intro splash plays once per browser session
+  const [loading, setLoading] = useState(() => {
+    try {
+      if (sessionStorage.getItem("capvtal-intro")) return false;
+      sessionStorage.setItem("capvtal-intro", "1");
+    } catch {
+      /* storage blocked — just show it */
+    }
+    return true;
+  });
   const handleComplete = useCallback(() => setLoading(false), []);
 
   return (
