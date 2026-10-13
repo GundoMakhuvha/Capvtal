@@ -87,9 +87,9 @@ const Index = () => {
 
   return (
     <div className="relative">
-      {/* ── Hero ───────────────────────────────────────────── */}
+      {/* ── Hero ── always uses the light look (daytime sky), even in dark mode ── */}
       <section
-        className="relative -mt-24 flex min-h-[100svh] items-center justify-center overflow-hidden pt-24 md:-mt-28 md:pt-28"
+        className="light relative -mt-24 flex min-h-[100svh] items-center justify-center overflow-hidden pt-24 text-foreground md:-mt-28 md:pt-28"
         aria-label="Introduction"
       >
         <CloudsBackground variant="brand" />
