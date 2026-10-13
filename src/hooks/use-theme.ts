@@ -4,15 +4,15 @@ type Theme = "dark" | "light";
 
 const readStored = (): Theme => {
   try {
-    return localStorage.getItem("theme") === "light" ? "light" : "dark";
+    return localStorage.getItem("theme") === "dark" ? "dark" : "light";
   } catch {
-    return "dark";
+    return "light";
   }
 };
 
-/** Dark by default (brand look). Persists choice and keeps the iOS status-bar colour in sync. */
+/** Light by default. Persists choice and keeps the iOS status-bar colour in sync. */
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(() => (typeof window === "undefined" ? "dark" : readStored()));
+  const [theme, setTheme] = useState<Theme>(() => (typeof window === "undefined" ? "light" : readStored()));
 
   useEffect(() => {
     const root = document.documentElement;
